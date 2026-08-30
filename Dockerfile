@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS build
+FROM ubuntu:26.04 AS build
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends polyml \
@@ -10,7 +10,7 @@ COPY tests/ tests/
 RUN poly --script src/stakeholder.sml --list-values >/dev/null \
     && POLY=poly tests/test_cli.sh
 
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates polyml \
