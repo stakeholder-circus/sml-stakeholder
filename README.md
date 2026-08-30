@@ -1,5 +1,5 @@
-> [!WARNING]
-> This repository is AI-assisted and manually reviewed. It is local-only in the resource-safe small deterministic tranche.
+> [!NOTE]
+> This repository is AI-assisted and manually reviewed. Deterministic behavior is validated natively and in Docker; live-provider support remains a separate tranche.
 
 # sml-stakeholder
 
@@ -17,7 +17,10 @@ Standard ML implementation of the stakeholder deterministic first tranche using 
 
 - `python3 scripts/validate_scaffold.py`
 - `make compiler-proof`
+- `make analyze`
 - `make test`
 - `poly --script src/stakeholder.sml --list-values`
+- `docker build -t sml-stakeholder .`
+- `docker run --rm sml-stakeholder --list-values`
 
-Docker is intentionally not used in this M1-safe pass; native Poly/ML is the validation lane.
+GitHub Actions runs the contract, native Poly/ML, Docker, dependency-review, actionlint, load/SAST, and workflow-security gates. Required checks are bound to `main` after the first green pull request.

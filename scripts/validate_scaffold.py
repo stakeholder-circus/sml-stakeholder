@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Standard ML local deterministic tranche baseline file presence."""
+"""Validate the Standard ML deterministic tranche and delivery baseline."""
 
 from pathlib import Path
 
@@ -20,6 +20,11 @@ REQUIRED = [
     ".github/workflows/ci.yml",
     ".github/workflows/ci-native.yml",
     ".github/workflows/docker-smoke.yml",
+    ".github/workflows/actionlint.yml",
+    ".github/workflows/dependency-review.yml",
+    ".github/workflows/sast.yml",
+    ".github/workflows/security-analysis.yml",
+    ".github/dependabot.yml",
     "Makefile",
     "src/stakeholder.sml",
     "tests/test_cli.sh",
@@ -32,7 +37,26 @@ def main() -> int:
         for path in missing:
             print(f"missing Standard ML deterministic tranche file: {path}")
         return 1
-    print("Standard ML deterministic tranche baseline files present; run make test for native validation")
+    status_files = [
+        "AGENTS.md",
+        "README.md",
+        "STATUS.md",
+        "GAPS.md",
+        "PARITY.md",
+        "docs/remotes.md",
+    ]
+    stale_markers = ("scaffold-only", "Docker validation is deferred", "local only, no upstream tracking")
+    stale = [
+        f"{path}: {marker}"
+        for path in status_files
+        for marker in stale_markers
+        if marker in Path(path).read_text(encoding="utf-8")
+    ]
+    if stale:
+        for finding in stale:
+            print(f"stale Standard ML status marker: {finding}")
+        return 1
+    print("Standard ML deterministic runtime, delivery, and security baseline files are present")
     return 0
 
 
